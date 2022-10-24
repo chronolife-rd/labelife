@@ -1,6 +1,6 @@
 # Constantes
 QUALITY_OPTIONS = ('-', 'Excellent', 'Good', 'Medium', 'Bad')
-QUALITY_DICT    = {'-':-1, 'Excellent':0, 'Good':1, 'Medium':2, 'Bad': 3}
+QUALITY_DICT    = {'-':0, 'Excellent':1, 'Good':2, 'Medium':3, 'Bad': 4}
 
 PATH_IMAGE       = 'data/'
 PATH_DATA        = 'data/'
