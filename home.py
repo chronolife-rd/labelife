@@ -39,11 +39,8 @@ s_finish = st.empty()
 s_progress_info = st.empty()
 s_progress_bar  = st.empty()
 
-# Label info
-s_label_info = st.empty()
-
 # Columns
-col1,col2,col3 = st.columns([4,0.5,4]) 
+col1,col2,col3 = st.columns([6,1,2]) 
 
 # Buttons
 s_btn_previous  = col2.empty() 
@@ -59,6 +56,9 @@ btn_add_label   = s_btn_add_label.button('Add')
 
 # Image zone
 s_image = col1.empty()
+
+# Label info
+s_label_info = st.empty()
 
 # Posted message
 s_post = st.empty()
@@ -82,7 +82,7 @@ if btn_add_label:
     st.session_state['update'] = True
     st.session_state['post'] = True
     # check finish 
-    display_post_message(s_post)
+    display_post_message(s_post, quality)
     update_finish_message(s_finish, data, username)
 
 if st.session_state['update']:

@@ -89,7 +89,8 @@ def update_quality_radiobutton(s_radiobtn, data, username, QUALITY_DICT, QUALITY
     
 def update_label_info(s_label_info, data, username, QUALITY_DICT):
     if has_label(data, username, QUALITY_DICT):
-        s_label_info.info('Already annotated')  
+        q = data.loc[st.session_state['cnt']-1, ('label-' + username)]
+        s_label_info.info('Already annotated with "' + q + '"')  
 
 def update_image(PATH_IMAGE, data, username, s_image):
     image, idx  = get_image(PATH_IMAGE, data, username)
@@ -118,8 +119,8 @@ def update_download(data, s_download):
         file_name='data_label.xlsx',
     )
     
-def display_post_message(s_post):
-    s_post.success('Label added')
+def display_post_message(s_post, quality):
+    s_post.success('"' + quality + '" label added')
     
 def hide_post_message(s_post):
     if st.session_state['post']:
