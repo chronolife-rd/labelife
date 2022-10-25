@@ -3,6 +3,7 @@ from PIL import Image
 from io import BytesIO
 import pandas as pd
 import time
+import math
 
 def restart_session():
     st.session_state['cnt'] = 1
@@ -47,9 +48,13 @@ def convert_data_to_excel(data):
     processed_data = output.getvalue()
     return processed_data
 
+def clean_comment(s_comment):
+    s_comment.text_area("Comments:", value="")
+
 def get_data(PATH_DATA, username):
     data = pd.read_excel(PATH_DATA + 'data.xls')
     data = add_label_operator_column(data, username)
+    data = add_comment_operator_column(data, username)
 
     return data
 
@@ -69,17 +74,31 @@ def add_label_operator_column(data, username):
         data[('label-' + username)] = '-'
     return data
 
+def add_comment_operator_column(data, username):
+    if ('comment-' + username) not in data.columns:
+        data[('comment-' + username)] = ''
+    return data
+
 def has_label(data, username, QUALITY_DICT):
-    label = False
+    has_lab = False
     q = data.loc[st.session_state['cnt']-1, ('label-' + username)]
     if q != '-':
-        label = True
+        has_lab = True
        
-    return label
+    return has_lab
 
-def post_label(data, username, quality, PATH_DATA):
+def has_comment(data, username, QUALITY_DICT):
+    has_com = False
+    comment = data.loc[st.session_state['cnt']-1, ('comment-' + username)]
+    if isinstance(comment, str):
+        has_com = True
+       
+    return has_com
+
+def post_data(data, username, quality, comment, PATH_DATA):
     data.loc[st.session_state['cnt']-1, ('label-' + username)] = quality
-    data.to_excel(PATH_DATA + 'data.xls', index=False)
+    data.loc[st.session_state['cnt']-1, ('comment-' + username)] = comment
+    data.to_excel(PATH_DATA + 'data.xls', index=False)      
 
 def update_quality_radiobutton(s_radiobtn, data, username, QUALITY_DICT, QUALITY_OPTIONS):
     if has_label(data, username, QUALITY_DICT):
@@ -91,6 +110,11 @@ def update_label_info(s_label_info, data, username, QUALITY_DICT):
     if has_label(data, username, QUALITY_DICT):
         q = data.loc[st.session_state['cnt']-1, ('label-' + username)]
         s_label_info.info('Already annotated with "' + q + '"')  
+
+def update_comment(s_comment, data, username, QUALITY_DICT):
+    if has_comment(data, username, QUALITY_DICT):
+        comment = data.loc[st.session_state['cnt']-1, ('comment-' + username)]
+        s_comment.text_area("Comments:", value=comment)  
 
 def update_image(PATH_IMAGE, data, username, s_image):
     image, idx  = get_image(PATH_IMAGE, data, username)

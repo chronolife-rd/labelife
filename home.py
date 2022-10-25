@@ -13,24 +13,16 @@ init_session()
 # ------------- BEGIN BODY SIDEBAR
 username = st.sidebar.selectbox(MESSAGE_USER_SLECTION, USERNAMES, key='username', on_change=restart_session)
 
-if username == '':
-    st.stop()
-else:
-    username = username.lower()
-
 # Download
 s_download = st.sidebar.empty()
 # ------------- END BODY SIDEBAR
 
-# ------------- BEGIN GET DATA
-data = get_data(PATH_DATA, username)
-imax = len(data)
-# ------------- END GET DATA
-
 # ------------- BEGIN BODY  
+# Start message
+s_start_message = st.empty()
+
 # Title
 s_title = st.empty()
-s_title.title('Labelife')
 
 # Finish info
 s_finish = st.empty()
@@ -47,17 +39,11 @@ s_btn_first     = col2.empty()
 s_btn_last      = col3.empty()
 s_btn_previous  = col2.empty() 
 s_btn_next      = col3.empty()
-btn_first       = s_btn_first.button('First') 
-btn_last        = s_btn_last.button('Last')
-btn_previous    = s_btn_previous.button('Previous') 
-btn_next        = s_btn_next.button('Next')
 
 # Radiobuttons
 s_radiobtn      = col2.empty()
+s_comment       = col2.empty()
 s_btn_add_label = col2.empty()
-quality         = s_radiobtn.radio("ECG Quality", QUALITY_OPTIONS)
-btn_add_label   = s_btn_add_label.button('Add')
-
 
 # Image zone
 s_image = col1.empty()
@@ -66,8 +52,31 @@ s_image = col1.empty()
 s_label_info = st.empty()
 
 # Posted message
-s_post = st.empty()
+s_post = col2.empty()
 # ------------- END BODY
+
+# ------------- BEGIN COMPLETE BODY
+if username == '':
+    s_start_message.title('Select a profile to start labeling')
+    st.stop()
+else:
+    username = username.lower()
+
+# s_title.title('Labelife')
+btn_first       = s_btn_first.button('First') 
+btn_last        = s_btn_last.button('Last')
+btn_previous    = s_btn_previous.button('Previous') 
+btn_next        = s_btn_next.button('Next')
+quality         = s_radiobtn.radio("ECG Quality", QUALITY_OPTIONS)
+btn_add_label   = s_btn_add_label.button('Add')
+comment         = s_comment.text_area("Comments:", value="")
+# ------------- END COMPLETE BODY  
+
+# ------------- BEGIN GET DATA
+data = get_data(PATH_DATA, username)
+imax = len(data)
+# ------------- END GET DATA
+
 
 # ------------- BEGIN EVENTS
 if btn_first:
@@ -89,7 +98,7 @@ if btn_next:
     st.session_state['update'] = True
 
 if btn_add_label:
-    post_label(data, username, quality, PATH_DATA)
+    post_data(data, username, quality, comment, PATH_DATA)
     if st.session_state['cnt'] < imax:
         st.session_state['cnt'] += 1
     st.session_state['update'] = True
@@ -101,6 +110,7 @@ if btn_add_label:
 if st.session_state['update']:
     update_quality_radiobutton(s_radiobtn, data, username, QUALITY_DICT, QUALITY_OPTIONS)
     update_label_info(s_label_info, data, username, QUALITY_DICT)
+    update_comment(s_comment, data, username, QUALITY_DICT)
     st.session_state['update'] = False
     
 # ------------- END EVENTS
