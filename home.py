@@ -43,8 +43,12 @@ s_progress_bar  = st.empty()
 col1,col2,col3 = st.columns([6,1,2]) 
 
 # Buttons
+s_btn_first     = col2.empty() 
+s_btn_last      = col3.empty()
 s_btn_previous  = col2.empty() 
 s_btn_next      = col3.empty()
+btn_first       = s_btn_first.button('First') 
+btn_last        = s_btn_last.button('Last')
 btn_previous    = s_btn_previous.button('Previous') 
 btn_next        = s_btn_next.button('Next')
 
@@ -53,6 +57,7 @@ s_radiobtn      = col2.empty()
 s_btn_add_label = col2.empty()
 quality         = s_radiobtn.radio("ECG Quality", QUALITY_OPTIONS)
 btn_add_label   = s_btn_add_label.button('Add')
+
 
 # Image zone
 s_image = col1.empty()
@@ -65,6 +70,14 @@ s_post = st.empty()
 # ------------- END BODY
 
 # ------------- BEGIN EVENTS
+if btn_first:
+    st.session_state['cnt'] = 1
+    st.session_state['update'] = True
+
+if btn_last:
+    st.session_state['cnt'] = len(data)
+    st.session_state['update'] = True
+
 if btn_previous:
     if st.session_state['cnt'] > 1:
         st.session_state['cnt'] -= 1
