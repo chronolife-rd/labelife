@@ -124,7 +124,7 @@ def update_comment_info(s_comment_info, s_comment, data, username, QUALITY_DICT)
 #     s_comment.text_area("Comment:", value=" ")
 
 def update_image(PATH_IMAGE, data, username, s_image):
-    image, idx  = get_image('image/', data, username)
+    image, idx  = get_image('PATH_IMAGE', data, username)
     s_image.image(image, caption='ECG')
 
 def update_progress(PATH_IMAGE, data, username, s_image, s_progress_info, s_progress_bar):
