@@ -100,21 +100,28 @@ def post_data(data, username, quality, comment, PATH_DATA):
     data.loc[st.session_state['cnt']-1, ('comment-' + username)] = comment
     data.to_excel(PATH_DATA + 'data.xls', index=False)      
 
-def update_quality_radiobutton(s_radiobtn, data, username, QUALITY_DICT, QUALITY_OPTIONS):
-    if has_label(data, username, QUALITY_DICT):
-        q = data.loc[st.session_state['cnt']-1, ('label-' + username)]
-        if QUALITY_DICT[q] > 0:
-            quality = s_radiobtn.radio("ECG Quality", QUALITY_OPTIONS, QUALITY_DICT[q])
+# def update_quality_radiobutton(s_radiobtn, data, username, QUALITY_DICT, QUALITY_OPTIONS):
+#     if has_label(data, username, QUALITY_DICT):
+#         q = data.loc[st.session_state['cnt']-1, ('label-' + username)]
+#         if QUALITY_DICT[q] > 0:
+#             s_radiobtn.empty()
+#             s_radiobtn.radio("ECG Quality", QUALITY_OPTIONS, QUALITY_DICT[q])
     
 def update_label_info(s_label_info, data, username, QUALITY_DICT):
     if has_label(data, username, QUALITY_DICT):
         q = data.loc[st.session_state['cnt']-1, ('label-' + username)]
-        s_label_info.info('Already annotated with "' + q + '"')  
+        s_label_info.empty()
+        s_label_info.info('Label: ' + q)  
 
-def update_comment(s_comment, data, username, QUALITY_DICT):
+def update_comment_info(s_comment_info, s_comment, data, username, QUALITY_DICT):
     if has_comment(data, username, QUALITY_DICT):
         comment = data.loc[st.session_state['cnt']-1, ('comment-' + username)]
-        s_comment.text_area("Comments:", value=comment)  
+        s_comment_info.empty()
+        s_comment_info.warning("Comment: " + comment)
+
+# def init_comment(s_comment):
+#     s_comment.empty()
+#     s_comment.text_area("Comment:", value=" ")
 
 def update_image(PATH_IMAGE, data, username, s_image):
     image, idx  = get_image(PATH_IMAGE, data, username)
@@ -138,7 +145,7 @@ def update_download(data, s_download):
     excel = convert_data_to_excel(data)
 
     s_download.download_button(
-        label="Download labels",
+        label="Download",
         data=excel,
         file_name='data_label.xlsx',
     )
