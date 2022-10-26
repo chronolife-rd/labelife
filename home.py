@@ -14,24 +14,16 @@ init_session()
 s_start_message = st.empty()
 
 # ------------- BEGIN BODY 
+st.sidebar.title('Labelife')
+
 # Profile
 profile = st.sidebar.selectbox(MESSAGE_USER_SLECTION, USERNAMES, key='profile', on_change=restart_session)
-st.sidebar.markdown('#') # Space
 
 if profile == '':
     s_start_message.title('Select a profile to start labeling')
     st.stop()
 else:
     username = profile.lower()
-
-# Radiobuttons
-with st.sidebar.form("my_form"):
-    s_radiobtn      = st.empty()
-    s_comment       = st.empty()
-    btn_add         = st.form_submit_button('Add')
-
-# Posted message
-s_post = st.sidebar.empty()
 
 # Download
 st.sidebar.markdown('#') # Space
@@ -49,17 +41,31 @@ s_progress_info = st.empty()
 s_progress_bar  = st.empty()
 
 # Navigation
-_, c_nav1, c_nav2, c_nav3, c_nav4, _= st.columns([6,1,1,1,1,6]) 
+c_nav1, c_nav2, c_nav3, c_nav4,_,_= st.columns([1,1,1,1,6,6]) 
 s_btn_first     = c_nav1.empty() 
 s_btn_previous  = c_nav2.empty() 
 s_btn_next      = c_nav3.empty()
 s_btn_last      = c_nav4.empty()
 
-_,col_img,_,= st.columns([1,5,1]) 
+col_form,col_img = st.columns([2,5]) 
+
+# Form
+with col_form:
+    st.markdown('#') # Space
+    st.markdown('#') # Space
+    with st.form("my_form"):
+        # Posted message
+        s_radiobtn      = st.empty()
+        s_comment       = st.empty()
+        btn_add         = st.form_submit_button('Add')
+        s_post = st.empty()
+
+    
+
 # Label info
-s_label_info = col_img.empty()
+s_label_info = col_form.empty()
 # Comment info
-s_comment_info = col_img.empty()
+s_comment_info = col_form.empty()
 
 # Image zone
 s_image = col_img.empty()
@@ -103,21 +109,20 @@ if btn_next:
 
 if btn_add:
     post_data(data, username, quality, comment, PATH_DATA)
-    
     if st.session_state['cnt'] < imax:
         st.session_state['cnt'] += 1
     st.session_state['update'] = True
     st.session_state['post'] = True
 
-if st.session_state['update']:
-    update_label_info(s_label_info, data, username, QUALITY_DICT)
-    update_comment_info(s_comment_info, s_comment, data, username, QUALITY_DICT)
-    st.session_state['update'] = False
-
 if st.session_state['post']:
     # check finish 
     display_post_message(s_post, quality)
     update_finish_message(s_finish, data, username)
+
+if st.session_state['update']:
+    update_label_info(s_label_info, data, username, QUALITY_DICT)
+    update_comment_info(s_comment_info, s_comment, data, username, QUALITY_DICT)
+    st.session_state['update'] = False
 
 # ------------- END EVENTS
 

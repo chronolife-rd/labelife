@@ -111,7 +111,7 @@ def update_label_info(s_label_info, data, username, QUALITY_DICT):
     if has_label(data, username, QUALITY_DICT):
         q = data.loc[st.session_state['cnt']-1, ('label-' + username)]
         s_label_info.empty()
-        s_label_info.info('Label: ' + q)  
+        s_label_info.info('Labelized as "' + q + '"')  
 
 def update_comment_info(s_comment_info, s_comment, data, username, QUALITY_DICT):
     if has_comment(data, username, QUALITY_DICT):
