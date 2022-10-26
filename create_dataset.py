@@ -7,11 +7,10 @@ from pylife.useful import unwrap
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from constant import PATH_DATA, PATH_IMAGE
 
 # %% Request data
 path_api_ids        = 'C:/Users/MichelClet/Desktop/mcl/api/v2/prod/'
-path_save_image     = 'image/'
-path_save_data      = 'data/'
 
 end_user   	= '3JLqh6'
 from_time   = "2022-10-21 11:00:00"
@@ -64,7 +63,7 @@ for i, ecgf in enumerate(ecgfs):
         # Main window
         imin        = iw 
         imax        = imin + window 
-        print(imin/fs, imax/fs)
+        # print(imin/fs, imax/fs)
         if imax >= len(ecgf[:length]):
             imax = len(ecgf[:length])-1
         ecgf_seg    = ecgf[imin:imax]
@@ -95,10 +94,10 @@ for i, ecgf in enumerate(ecgfs):
         plt.axvspan(tseg[imin_center], tseg[imiax_center], facecolor=facecolor, alpha=alpha)
         plt.xticks([])
         plt.legend(fontsize=fontsize)
-        plt.savefig(path_save_image + str(count)+'.jpg')
+        plt.savefig(PATH_IMAGE + str(count)+'.jpg')
         plt.close('all')
         count+=1
 
 # Dataset
-df.to_excel(path_save_data + 'data.xls', index=False)
+df.to_excel(PATH_DATA + 'data.xls', index=False)
 
