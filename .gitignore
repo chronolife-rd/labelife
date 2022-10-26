@@ -1,3 +1,2 @@
-# Ignore a file with the specified name.
-# Scoped to the '__pycache__' subfolder.
-__pycache__
+# Ignore files in '__pycache__' folder.
+__pycache__/
