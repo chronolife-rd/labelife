@@ -1,35 +1,24 @@
-# Path to pylife
-path_root = 'C:/Users/MichelClet/Desktop/mcl/python/'
-# Path to API ids file
-path_ids = 'C:/Users/MichelClet/Desktop/mcl/api/v2/prod/'
-
 import os
 import sys
-sys.path.append(path_root)
 from pylife.env import get_env
 DEV = get_env()
 from pylife.datalife import Apilife
 from pylife.useful import unwrap
 import matplotlib.pyplot as plt
-from report.excel import excel_report
 import numpy as np
 import pandas as pd
 
-# %%
+# %% Request data
+path_api_ids        = 'C:/Users/MichelClet/Desktop/mcl/api/v2/prod/'
+path_save_image     = 'image/'
+path_save_data      = 'data/'
 
-# Folder where results will be saved
-results_folder = os.getcwd()
-
-end_user   	= '3g5Vbz' #3g5Vbz, 3JLqh6
-from_time   = "2022-10-25 19:30:00"
-to_time     = "2022-10-25 20:15:00"
+end_user   	= '3JLqh6'
+from_time   = "2022-10-21 11:00:00"
+to_time     = "2022-10-21 11:05:00"
 time_zone   = 'CEST'
 
-entity          = 'test'     # Medbase: 5qfYth, Skinup: 5YXjZB, Rowan: 4CDHyt
-device          = ''
-project         = ''
-
-params = {'path_ids': path_ids, 'api_version': 2,
+params = {'path_ids': path_api_ids, 'api_version': 2,
           'end_user': end_user, 
           'from_time': from_time, 'to_time': to_time, 'time_zone': time_zone,
           'device_model': 'tshirt',
@@ -43,36 +32,17 @@ print('Getting...')
 al.get()
 print('Parsing...')
 al.parse()
-
-# plt.close('all')
-# al.show()
-
-print(al.fw_versions_)
-
-# %%
 print('filtering...')
 al.filt()
-# print('cleaning...')
-# al.clean()
-# print('analysing...')
-# al.analyze()
 
-# %% Generate xls report 
-# path_save = 'C:/Users/MichelClet/Desktop/mcl/python/api'
-report = excel_report(al, verbose=1,
-                        flag_clean=al.flag_clean_,
-                        flag_analyze=al.flag_analyze_,
-                        path_save=None)
-
+# %% Create dataset
 # Init Dataframe
 df = pd.DataFrame(columns=['seg_id', 'user_id', 'start_at', 'stop_at'])
 
 # Figure parameters
-path_save_image = 'image/'
-path_save_data  = 'data/'
-alpha = 0.1
-facecolor = 'blue'
-fontsize = 16
+alpha       = 0.1
+facecolor   = 'blue'
+fontsize    = 16
 
 # Signals
 fs      = al.ecg.fs_
@@ -80,10 +50,10 @@ length  = 500*fs # sec
 ecgfs   = al.ecg.sig_filt_
 times   = al.ecg.sig_
 
-window          = 15*fs
-overlap         = 10*fs
-window_center   = 5*fs
-cnt             = 1
+window          = 15*fs # sec
+overlap         = 10*fs # sec
+window_center   = 5*fs # sec
+count           = 1
 
 for i, ecgf in enumerate(ecgfs):
     times   = al.ecg.times_[i]
@@ -108,10 +78,10 @@ for i, ecgf in enumerate(ecgfs):
             imiax_center = len(tseg)-1
             
         # Complete Dataframe
-        df.loc[cnt, 'seg_id']      = cnt
-        df.loc[cnt, 'start_at']    = tseg[imin_center]
-        df.loc[cnt, 'stop_at']     = tseg[imiax_center]
-        df.loc[cnt, 'user_id']     = end_user
+        df.loc[count, 'seg_id']      = count
+        df.loc[count, 'start_at']    = tseg[imin_center]
+        df.loc[count, 'stop_at']     = tseg[imiax_center]
+        df.loc[count, 'user_id']     = end_user
         
         # Figure
         plt.figure(figsize=(15,5))
@@ -125,11 +95,10 @@ for i, ecgf in enumerate(ecgfs):
         plt.axvspan(tseg[imin_center], tseg[imiax_center], facecolor=facecolor, alpha=alpha)
         plt.xticks([])
         plt.legend(fontsize=fontsize)
-        plt.savefig(path_save_image + str(cnt)+'.jpg')
+        plt.savefig(path_save_image + str(count)+'.jpg')
         plt.close('all')
-        cnt+=1
+        count+=1
 
-
-# %%
+# Dataset
 df.to_excel(path_save_data + 'data.xls', index=False)
 
