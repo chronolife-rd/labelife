@@ -27,10 +27,10 @@ print(os.getcwd())
 path_api_ids        = 'C:/Users/blandrieu/OneDrive - Passage innovation/Documents/GitCode/api' #'C:/Users/MichelClet/Desktop/mcl/api/v2/prod/'
 
 
-testeurs = patients_BPML
+testeurs = patients_continuity
 print([t['name_user'] for t in testeurs])
 
-i=0
+i=4
 name            = testeurs[i]['name_user']
 name_user       = testeurs[i]['name_user']
 end_user        = testeurs[i]['end_user'] 
@@ -44,9 +44,9 @@ params = {'path_ids': path_api_ids, 'api_version': 2,
           'end_user': end_user, 
           'from_time': from_time, 'to_time': to_time, 'time_zone': time_zone,
           'device_model': 'tshirt',
-          'flag_acc': True, 'flag_breath': True, 
-          'flag_ecg': True, 'flag_temp': True, 'flag_temp_valid': False,
-          'flag_imp': False,  'activity_types': '',
+          'flag_acc': False, 'flag_breath': False, 
+          'flag_ecg': True, 'flag_temp': False, 'flag_temp_valid': False,
+          'flag_imp': True,  'activity_types': '',
           }
 
 al = Apilife(params)
@@ -67,11 +67,11 @@ facecolor   = 'blue'
 fontsize    = 16
 
 # Signals
-fs      = al.ecg.fs_
-length  = 500*fs # sec
-ecgfs   = al.ecg.sig_filt_
-times   = al.ecg.sig_
-
+fs        = al.ecg.fs_
+length    = 500*fs # sec
+ecgfs     = al.ecg.sig_filt_
+times     = al.ecg.sig_
+imp_times = pd.DataFrame({'imp' : unwrap(al.imp_1.times_)})
 window          = 15*fs # sec
 overlap         = 10*fs # sec
 window_center   = 5*fs # sec
@@ -86,11 +86,18 @@ for i, ecgf in enumerate(ecgfs):
     times   = al.ecg.times_[i]
     ecg     = al.ecg.sig_[i]
     
+    
     for iw in range(0, len(ecgf[:length]), window-overlap):  
-        
         # Main window
         imin        = iw 
         imax        = imin + window 
+        
+        if imp_times.shape[0]>0:
+            imp_seg     = imp_times.loc[(imp_times['imp']>times[imin])
+                                        &(imp_times['imp']<times[min(imax, len(times)-1)])]
+        else:
+            imp_seg = imp_times
+        
         # print(imin/fs, imax/fs)
         if imax >= len(ecgf[:length]):
             imax = len(ecgf[:length])-1
@@ -114,16 +121,20 @@ for i, ecgf in enumerate(ecgfs):
         plt.figure(figsize=(15,5))
         plt.subplot(211)
         plt.plot(tseg, ecg_seg, label='Raw')
+        if imp_seg.shape[0]>0:
+            plt.axvline(imp_seg['imp'][0], label = 'Impedance', c='r', linestyle = '--')
         plt.axvspan(tseg[imin_center], tseg[imiax_center], facecolor=facecolor, alpha=alpha)
         plt.xticks([])
         plt.legend(fontsize=fontsize)
         plt.subplot(212)
-        plt.plot(tseg, ecgf_seg, label='Filtered')
+        plt.plot(tseg, ecgf_seg, label='Filtered')        
+        if imp_seg.shape[0]>0:
+            plt.axvline(imp_seg['imp'][0], label = 'Impedance', c='r', linestyle = '--')
         plt.axvspan(tseg[imin_center], tseg[imiax_center], facecolor=facecolor, alpha=alpha)
         plt.xticks([])
         plt.legend(fontsize=fontsize)
         date_savefriendly = str(tseg[imin_center])[:13]+'_'+str(tseg[imin_center])[14:16]+'_'+str(tseg[imin_center])[17:19]
-        plt.savefig(PATH_IMAGE +str(count)+'_'+end_user+'_'+ date_savefriendly+'.jpg')
+        plt.savefig(PATH_IMAGE +str(count)+'.jpg')
         plt.show()
         plt.close('all')
         count+=1

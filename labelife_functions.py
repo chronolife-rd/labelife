@@ -125,7 +125,7 @@ def update_comment_info(s_comment_info, s_comment, data, username, QUALITY_DICT)
 
 def update_image(PATH_IMAGE, data, username, s_image):
     image, idx  = get_image(PATH_IMAGE, data, username)
-    s_image.image(image, caption='ECG')
+    s_image.image(image, caption='ECG '+username)
 
 def update_progress(PATH_IMAGE, data, username, s_image, s_progress_info, s_progress_bar):
     idx = st.session_state['cnt'] 
