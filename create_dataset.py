@@ -1,21 +1,44 @@
+
+#%% librairies
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
 import os
 import sys
+path_root='C:/Users/blandrieu/OneDrive - Passage innovation/Documents/GitHub/'
+sys.path.append(path_root)
 from pylife.env import get_env
 DEV = get_env()
 from pylife.datalife import Apilife
 from pylife.useful import unwrap
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
+
+
+path_root='C:/Users/blandrieu/OneDrive - Passage innovation/Documents/Labellisation/labelife/'
+sys.path.append(path_root)
 from constant import PATH_DATA, PATH_IMAGE
+from data import patients_continuity, patients_BPMH, patients_BPML
+
+os.chdir(path_root)
+print(os.getcwd())
 
 # %% Request data
-path_api_ids        = 'C:/Users/MichelClet/Desktop/mcl/api/v2/prod/'
+path_api_ids        = 'C:/Users/blandrieu/OneDrive - Passage innovation/Documents/GitCode/api' #'C:/Users/MichelClet/Desktop/mcl/api/v2/prod/'
 
-end_user   	= '3JLqh6'
-from_time   = "2022-10-21 11:00:00"
-to_time     = "2022-10-21 11:05:00"
-time_zone   = 'CEST'
+
+testeurs = patients_BPML
+print([t['name_user'] for t in testeurs])
+
+i=0
+name            = testeurs[i]['name_user']
+name_user       = testeurs[i]['name_user']
+end_user        = testeurs[i]['end_user'] 
+from_time       = testeurs[i]['from_time']
+to_time         = testeurs[i]['to_time']
+time_zone       = testeurs[i]['time_zone'] #
+print(name)
+
 
 params = {'path_ids': path_api_ids, 'api_version': 2,
           'end_user': end_user, 
@@ -52,7 +75,12 @@ times   = al.ecg.sig_
 window          = 15*fs # sec
 overlap         = 10*fs # sec
 window_center   = 5*fs # sec
-count           = 1
+#count           = 1
+
+#load previous excel and get count of last recorded point
+df_old = pd.read_excel(PATH_DATA + 'data.xls')
+count = df_old.loc[df_old.shape[0]-1,'seg_id'] +1
+
 
 for i, ecgf in enumerate(ecgfs):
     times   = al.ecg.times_[i]
@@ -94,10 +122,15 @@ for i, ecgf in enumerate(ecgfs):
         plt.axvspan(tseg[imin_center], tseg[imiax_center], facecolor=facecolor, alpha=alpha)
         plt.xticks([])
         plt.legend(fontsize=fontsize)
-        plt.savefig(PATH_IMAGE + str(count)+'.jpg')
+        date_savefriendly = str(tseg[imin_center])[:13]+'_'+str(tseg[imin_center])[14:16]+'_'+str(tseg[imin_center])[17:19]
+        plt.savefig(PATH_IMAGE +str(count)+'_'+end_user+'_'+ date_savefriendly+'.jpg')
+        plt.show()
         plt.close('all')
         count+=1
 
 # Dataset
-df.to_excel(PATH_DATA + 'data.xls', index=False)
+#concat
+dfnew = pd.concat([df_old, df])
+
+dfnew.to_excel(PATH_DATA + 'data.xls', index=False)
 
