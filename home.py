@@ -7,6 +7,7 @@ import numpy as np
 from constant import QUALITY_DICT, QUALITY_OPTIONS, PATH_DATA, PATH_IMAGE,\
                     MESSAGE_USER_SLECTION, USERNAMES
 from labelife_functions import *
+import pylife
 
 init_session()
 
