@@ -22,7 +22,14 @@ RigsHigh2 = {'name'             : 'Rigs_H_2',
               'to_time'         : "2022-06-14 13:30:00",
               'time_zone'       : 'UTC'}
 
-patients_BPMH = [RigsHigh1,RigsHigh2 ]
+Rigs3 = {'name'             : 'Rigs_U',
+            'name_user'         : '2dNbGq',
+              'end_user'        : '2dNbGq' ,
+              'from_time'       : "2022-06-14 20:00:00",
+              'to_time'         : "2022-06-14 21:00:00",
+              'time_zone'       : 'UTC'}
+
+patients_BPMH = [RigsHigh1,RigsHigh2, Rigs3 ]
 
 
 #### middle BPM
@@ -71,7 +78,7 @@ Blandine_nuit1  = {'name'            : 'Blandine_nuit1',
               'name_user'         : 'Blandine ',
               'end_user'        : '5dqvVy' ,
               'from_time'       : "2022-09-22 00:30:00",
-              'to_time'         : "2022-09-22 02:30:00" ,
+              'to_time'         : "2022-09-22 01:30:00" ,#2:30
               'time_zone'       : 'CEST'
               }
 Blandine_nuit2  = {'name'            : 'Blandine_nuit2',
@@ -86,7 +93,7 @@ Michel = {    'name'            : 'Michel',
               'name_user'       : 'Michel',
               'end_user'        : '26BFU1' ,
               'from_time'       : "2022-09-19 01:00:00",
-              'to_time'         : "2022-09-19 03:00:00" ,
+              'to_time'         : "2022-09-19 02:00:00" , # 3
               'time_zone'       : 'CEST'}
 Michel2 = {    'name'            : 'Michel',
               'name_user'       : 'Michel',
@@ -103,3 +110,7 @@ Alexandra = {    'name'            : 'Alexandra',
               'to_time'         : "2022-09-21 02:00:00" ,
               'time_zone'       : 'CEST'}
 patients_continuity = [Blandine_nuit1, Blandine_nuit2 , Michel, Michel2, Alexandra]
+
+#### saturation été
+
+Fernando_summer_2 = {}
