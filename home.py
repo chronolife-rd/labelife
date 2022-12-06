@@ -41,11 +41,12 @@ s_progress_info = st.empty()
 s_progress_bar  = st.empty()
 
 # Navigation
-c_nav1, c_nav2, c_nav3, c_nav4,_,_= st.columns([1,1,1,1,6,6]) 
+c_nav1, c_nav2, c_nav3, c_nav4, c_nav5,_,_= st.columns([1,1,1,1,1,6,6]) 
 s_btn_first     = c_nav1.empty() 
 s_btn_previous  = c_nav2.empty() 
 s_btn_next      = c_nav3.empty()
-s_btn_last      = c_nav4.empty()
+s_btn_middle    = c_nav4.empty()
+s_btn_last      = c_nav5.empty()
 
 col_form,col_img = st.columns([2,5]) 
 
@@ -74,7 +75,7 @@ s_image = col_img.empty()
 # ------------- BEGIN COMPLETE BODY
 # s_title.title('Labelife')
 btn_first       = s_btn_first.button('First') 
-btn_middle      = s_btn_first.button('Middle') 
+btn_middle      = s_btn_middle.button('Middle') 
 btn_last        = s_btn_last.button('Last')
 btn_previous    = s_btn_previous.button('Previous') 
 btn_next        = s_btn_next.button('Next')
@@ -95,7 +96,7 @@ if btn_first:
     st.session_state['update'] = True
     
 if btn_middle:
-    st.session_state['cnt'] = int(len(data)/2)
+    st.session_state['cnt'] = 1433
     st.session_state['update'] = True
 
 if btn_last:
