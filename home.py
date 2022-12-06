@@ -74,6 +74,7 @@ s_image = col_img.empty()
 # ------------- BEGIN COMPLETE BODY
 # s_title.title('Labelife')
 btn_first       = s_btn_first.button('First') 
+btn_middle      = s_btn_first.button('Middle') 
 btn_last        = s_btn_last.button('Last')
 btn_previous    = s_btn_previous.button('Previous') 
 btn_next        = s_btn_next.button('Next')
@@ -91,6 +92,10 @@ imax = len(data)
 # ------------- BEGIN EVENTS
 if btn_first:
     st.session_state['cnt'] = 1
+    st.session_state['update'] = True
+    
+if btn_middle:
+    st.session_state['cnt'] = int(len(data)/2)
     st.session_state['update'] = True
 
 if btn_last:
