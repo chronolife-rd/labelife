@@ -61,7 +61,6 @@ with col_form:
         btn_add         = st.form_submit_button('Add')
         s_post = st.empty()
 
-    
 
 # Label info
 s_label_info = col_form.empty()
