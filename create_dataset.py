@@ -160,6 +160,8 @@ path_api_ids = 'C:/Users/blandrieu/OneDrive - Passage innovation/Documents/GitCo
 #load previous excel and get count of last recorded point
 df_old = pd.read_excel(PATH_DATA + 'data.xls')
 count = df_old.loc[df_old.shape[0]-1,'seg_id'] +1
+
+
  
 df_integ['user'].unique()
 df_integ.columns
@@ -197,13 +199,13 @@ for u, user in enumerate( [ 'Fernando', 'Adriana', 'Ninon', 'Salma', 'Viviane'])
     print('filtering...')
     al.filt()
 
+    df_old = pd.read_excel(PATH_DATA + 'data.xls') 
+    # % Create dataset
+    # Init Dataframe
+    df = pd.DataFrame(columns=['seg_id', 'user_id', 'start_at', 'stop_at'])
     
     for min in [2,7,12,17,22,27,32,37,42,47,52,57]: # 12 min per subject, in the different phases, in order to explore more shapes of ECG
 
-        # % Create dataset
-        # Init Dataframe
-        df = pd.DataFrame(columns=['seg_id', 'user_id', 'start_at', 'stop_at'])
-         
         # Figure parameters
         alpha       = 0.1
         facecolor   = 'blue'
@@ -285,9 +287,18 @@ for u, user in enumerate( [ 'Fernando', 'Adriana', 'Ninon', 'Salma', 'Viviane'])
             
             count+=1
     
-    # Dataset
-    #concat
-    dfnew = pd.concat([df_old, df])
-    # df.to_excel(PATH_DATA + 'data.xls', index=False)
-    dfnew.to_excel(PATH_DATA + 'data.xls', index=False)                 
+        # Dataset
+        #concat
+        dfnew = pd.concat([df_old, df])
+        # df.to_excel(PATH_DATA + 'data.xls', index=False)
+        dfnew.to_excel(PATH_DATA + 'data.xls', index=False)                 
+
+#%%
+
+
+df_old.columns
+for user in dfnew['user_id'].unique():
+    usdf = dfnew.loc[dfnew['user_id']== user ]
+    print('user', user, 'start', usdf['seg_id'].values[0], 'stop', usdf['seg_id'].values[-1])
+    
 
