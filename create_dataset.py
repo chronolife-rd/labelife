@@ -291,7 +291,11 @@ for u, user in enumerate( [ 'Fernando', 'Adriana', 'Ninon', 'Salma', 'Viviane'])
         #concat
         dfnew = pd.concat([df_old, df])
         # df.to_excel(PATH_DATA + 'data.xls', index=False)
-        dfnew.to_excel(PATH_DATA + 'data.xls', index=False)                 
+        dfnew.to_excel(PATH_DATA + 'data.xls', index=False)  
+        
+        usdf = dfnew.loc[dfnew['user_id']== end_user ]
+        print('user', user, 'start', usdf['seg_id'].values[0], 'stop', usdf['seg_id'].values[-1])
+                       
 
 #%%
 

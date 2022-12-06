@@ -110,6 +110,7 @@ def post_data(data, username, quality, comment, PATH_DATA):
 def update_label_info(s_label_info, data, username, QUALITY_DICT):
     if has_label(data, username, QUALITY_DICT):
         q = data.loc[st.session_state['cnt']-1, ('label-' + username)]
+        print('q', q)
         s_label_info.empty()
         s_label_info.info('Labelized as "' + q + '"')  
 
